@@ -84,10 +84,6 @@ body {
 /* Windows */
 .os-window {
   position: absolute;
-  top: 10%;
-  left: 15%;
-  width: 70%;
-  height: 70%;
   background-color: var(--window-bg);
   border-radius: 8px 8px 0 0;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -95,7 +91,12 @@ body {
   flex-direction: column;
   overflow: hidden;
   border: 1px solid #444;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, width 0.2s, height 0.2s;
+}
+
+.os-window.maximized {
+  border-radius: 0;
+  border: none;
 }
 
 .os-window.active {
@@ -110,6 +111,248 @@ body {
   justify-content: space-between;
   align-items: center;
   user-select: none;
+  cursor: default;
+}
+
+/* Boot Screen */
+.boot-screen {
+  background-color: #000;
+  color: #fff;
+  height: 100vh;
+  width: 100vw;
+  padding: 2rem;
+  font-family: var(--font-ubuntu-mono), monospace;
+  font-size: 1.1rem;
+  overflow: hidden;
+}
+
+.boot-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* Login Screen */
+.login-screen {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.login-screen::before {
+  content: "";
+  position: absolute;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(15px);
+  z-index: 0;
+}
+
+.login-clock {
+  z-index: 10;
+  text-align: center;
+  color: white;
+  margin-bottom: 3rem;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  margin-top: -10vh;
+}
+
+.login-time {
+  font-size: 6rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.login-date {
+  font-size: 1.5rem;
+  font-weight: 300;
+  opacity: 0.9;
+  margin-top: 0.5rem;
+}
+
+.login-box-modern {
+  background: rgba(40, 40, 40, 0.6);
+  backdrop-filter: blur(20px);
+  padding: 2.5rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  text-align: center;
+  z-index: 10;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 320px;
+}
+
+.login-avatar-modern {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--mint-green), #4a752c);
+  border-radius: 50%;
+  margin: 0 auto 1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.login-name {
+  margin: 0 0 1.5rem 0;
+  font-weight: 500;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+}
+
+.login-action-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.6rem 2.5rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-action-btn:hover {
+  background-color: var(--mint-green);
+  border-color: var(--mint-green);
+  box-shadow: 0 4px 15px rgba(135, 165, 86, 0.4);
+}
+
+.login-action-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.login-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Context Menu */
+.skills-wrapper {
+  color: white;
+  min-height: 100%;
+  padding: 1rem;
+}
+
+.skills-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.skill-category-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.skill-category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  border-color: rgba(135, 165, 86, 0.5);
+}
+
+.skill-category-title {
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+  font-size: 1.3rem;
+  color: var(--mint-green);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 0.8rem;
+}
+
+.skill-category-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.skill-item-modern {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.1rem;
+  color: #ccc;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.skill-item-modern:hover {
+  color: white;
+  transform: translateX(5px);
+}
+
+.skill-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--mint-green);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--mint-green);
+}
+.context-menu {
+  position: absolute;
+  background-color: var(--bg-dark);
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 0.5rem 0;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.context-menu button {
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  padding: 0.5rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.context-menu button:hover {
+  background-color: var(--mint-green);
+  color: white;
+}
+
+.overlay-invisible {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1500;
 }
 
 .os-window-title {
@@ -386,8 +629,9 @@ body {
   position: absolute;
   bottom: 40px;
   left: 0;
-  width: 350px;
-  height: 450px;
+  width: 400px;
+  height: 550px;
+  max-height: calc(100vh - 60px);
   background-color: var(--bg-dark);
   border: 1px solid #444;
   border-bottom: none;
@@ -444,6 +688,7 @@ body {
   background-color: #222;
   color: white;
   margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
 .start-menu-search:focus {
@@ -454,6 +699,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .start-menu-app-btn {
@@ -478,4 +725,448 @@ body {
 
 .start-menu-app-icon {
   font-size: 1.5rem;
+}
+
+/* Conky Widget */
+.conky-widget {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.conky-time {
+  font-size: 5rem;
+  font-weight: 200;
+  line-height: 1;
+}
+.conky-date {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+.conky-sys {
+  font-size: 1rem;
+  font-family: monospace;
+  opacity: 0.7;
+}
+
+/* New Apps CSS */
+.file-explorer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #2b2b2b;
+  color: white;
+}
+.file-explorer-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #3a3a3a;
+  border-bottom: 1px solid #222;
+  gap: 1rem;
+}
+.explorer-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.explorer-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.explorer-path {
+  font-family: monospace;
+  font-size: 1rem;
+}
+.file-explorer-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+}
+.file-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.file-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+.file-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+.file-name {
+  font-size: 0.9rem;
+  text-align: center;
+  word-break: break-all;
+}
+.file-viewer pre {
+  background: #1e1e1e;
+  padding: 1rem;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-family: monospace;
+}
+
+/* System Monitor */
+.system-monitor-container {
+  padding: 1.5rem;
+  background: #1e1e1e;
+  color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.monitor-title {
+  margin: 0;
+  color: var(--mint-green);
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.5rem;
+}
+.monitor-section {
+  background: #2a2a2a;
+  padding: 1rem;
+  border-radius: 8px;
+}
+.monitor-label {
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+  color: #aaa;
+}
+.monitor-graph-box {
+  display: flex;
+  align-items: flex-end;
+  height: 60px;
+  gap: 2px;
+  position: relative;
+}
+.monitor-graph-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  flex: 1;
+  height: 100%;
+}
+.monitor-bar {
+  flex: 1;
+  min-width: 5px;
+  transition: height 0.5s ease-out;
+}
+.monitor-value {
+  position: absolute;
+  top: -25px;
+  right: 0;
+  font-weight: bold;
+}
+.monitor-stats {
+  display: flex;
+  justify-content: space-between;
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+/* Notepad */
+.notepad-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: white;
+  color: black;
+}
+.notepad-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  background: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+}
+.notepad-status {
+  font-size: 0.85rem;
+  color: #666;
+}
+.notepad-textarea {
+  flex: 1;
+  border: none;
+  resize: none;
+  padding: 1rem;
+  font-size: 1rem;
+  font-family: 'Ubuntu Mono', monospace;
+  outline: none;
+}
+
+/* Settings App */
+.settings-app-layout {
+  display: flex;
+  height: 100%;
+  background: #222;
+  color: white;
+}
+
+.settings-sidebar {
+  width: 200px;
+  background: #1a1a1a;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.settings-tab-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  padding: 1rem;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.settings-tab-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: white;
+}
+
+.settings-tab-btn.active {
+  background: rgba(255,255,255,0.1);
+  color: var(--mint-green);
+  border-left-color: var(--mint-green);
+}
+
+.settings-content-area {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.settings-section h3 {
+  margin-top: 0;
+  color: var(--mint-green);
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+}
+
+.settings-desc {
+  color: #bbb;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Theme Grid */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+.theme-card {
+  background: #333;
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s, background 0.2s;
+  border: 2px solid transparent;
+}
+.theme-card:hover {
+  transform: translateY(-3px);
+  background: #444;
+  border-color: rgba(255,255,255,0.2);
+}
+.theme-color-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+.theme-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Wallpaper Grid */
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.wallpaper-card {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.wallpaper-card:hover {
+  transform: scale(1.02);
+}
+.wallpaper-card.active {
+  border-color: var(--mint-green);
+}
+.wallpaper-thumb {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+.wallpaper-check {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.7);
+  color: var(--mint-green);
+  text-align: center;
+  padding: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+/* System Actions */
+.system-actions {
+  margin-top: 2rem;
+}
+
+/* Animations */
+@keyframes windowOpen {
+  0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.os-window {
+  animation: windowOpen 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes menuOpen {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.start-menu {
+  animation: menuOpen 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Browser App */
+.browser-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: white;
+  color: black;
+}
+.browser-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: #ddd;
+  border-bottom: 1px solid #ccc;
+  align-items: center;
+}
+.browser-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+.browser-btn:hover {
+  background: rgba(0,0,0,0.1);
+}
+.browser-url-input {
+  flex: 1;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #bbb;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+.browser-url-input:focus {
+  border-color: var(--mint-green);
+}
+.go-btn {
+  font-size: 0.9rem;
+  background: var(--mint-green);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+}
+.go-btn:hover {
+  background: #738c49;
+}
+.browser-content {
+  flex: 1;
+  background: white;
+}
+.browser-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  /* Hide Conky on mobile, takes up too much room */
+  .conky-widget {
+    display: none;
+  }
+
+  /* Make Start Menu full width on mobile */
+  .start-menu {
+    width: 100vw;
+    height: calc(100vh - 40px);
+    max-height: calc(100vh - 40px);
+    bottom: 40px;
+    border-radius: 0;
+  }
+
+  /* Make OS Windows fullscreen and non-draggable looking */
+  .os-window {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: calc(100vh - 40px) !important;
+    border-radius: 0 !important;
+    transform: none !important;
+  }
+  
+  /* Hide the maximize button on mobile since it's forced full screen */
+  .win-btn.max {
+    display: none;
+  }
+  
+  /* Restyle login box for small screens */
+  .login-box-modern {
+    width: 90%;
+    padding: 2rem 1.5rem;
+  }
+  
+  .login-clock .login-time {
+    font-size: 4rem;
+  }
 }
