@@ -31,6 +31,21 @@ import { SystemMonitorApp } from "@/components/SystemMonitorApp";
 import { NotepadApp } from "@/components/NotepadApp";
 import { SettingsApp } from "@/components/SettingsApp";
 import { BrowserApp } from "@/components/BrowserApp";
+import { ResumeApp } from "@/components/ResumeApp";
+import { ProjectsApp } from "@/components/ProjectsApp";
+import { SkillsApp } from "@/components/SkillsApp";
+import { GithubApp } from "@/components/GithubApp";
+import { ContactApp } from "@/components/ContactApp";
+import { VsCodeApp } from "@/components/VsCodeApp";
+import { AiAssistant } from "@/components/AiAssistant";
+
+type NotificationData = {
+  id: string;
+  title: string;
+  message: string;
+  icon: string;
+  type: 'system' | 'achievement';
+};
 
 function DraggableIcon({ app, onDoubleClick, initialY }: { app: WindowItem, onDoubleClick: () => void, initialY: number }) {
   const [pos, setPos] = useState({ x: 20, y: initialY });
@@ -80,6 +95,27 @@ export default function PortfolioDesktop() {
 
   const [dragging, setDragging] = useState<{ id: string; offsetX: number; offsetY: number } | null>(null);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
+
+  // Wow Factor States
+  const [loginInput, setLoginInput] = useState("");
+  const [isRecruiterMode, setIsRecruiterMode] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationData[]>([]);
+  const [achievements, setAchievements] = useState<Set<string>>(new Set());
+
+  const triggerNotification = (title: string, message: string, icon: string, type: 'system' | 'achievement' = 'system') => {
+    const id = Date.now().toString() + Math.random().toString();
+    setNotifications(prev => [...prev, { id, title, message, icon, type }]);
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    }, 5000);
+  };
+
+  const triggerAchievement = (id: string, title: string, message: string) => {
+    if (!achievements.has(id)) {
+      setAchievements(prev => new Set(prev).add(id));
+      triggerNotification(title, message, '🏆', 'achievement');
+    }
+  };
 
   // Boot sequence logic
   useEffect(() => {
@@ -171,6 +207,10 @@ export default function PortfolioDesktop() {
     setActiveWindow(id);
     setIsMenuOpen(false);
     setSearchQuery(""); // Reset search on open
+
+    // Achievement triggers
+    if (id === 'github') triggerAchievement('github', 'Code Reviewer', 'Viewed GitHub Stats!');
+    if (id === 'projects') triggerAchievement('projects', 'Project Manager', 'Explored the Projects Gallery!');
   };
 
   const closeWindow = (id: string) => {
@@ -207,90 +247,26 @@ export default function PortfolioDesktop() {
     setBgIndex((prev) => (prev + 1) % wallpapers.length);
   };
 
-  const skillCategories = [
-    {
-      category: "Frontend",
-      skills: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "HTML5/CSS3"]
-    },
-    {
-      category: "Backend",
-      skills: ["Node.js", "Express", "Python", "PostgreSQL", "MongoDB"]
-    },
-    {
-      category: "Tools & OS",
-      skills: ["Linux", "Git", "Docker", "AWS", "Bash Scripting"]
-    }
-  ];
-
-  const projects = [
-    {
-      id: 1, title: "System Monitor App", description: "A sleek web-based system monitor dashboard.", tags: ["React", "Node.js", "WebSockets"],
-    },
-    {
-      id: 2, title: "E-Commerce Platform", description: "A full-stack application built with modern web tech.", tags: ["Next.js", "TypeScript", "Tailwind"],
-    },
-    {
-      id: 3, title: "Terminal Portfolio", description: "An interactive portfolio mimicking a CLI.", tags: ["JavaScript", "CSS", "HTML"],
-    },
-  ];
-
   const apps: WindowItem[] = [
     {
       id: "about", title: "About Me", icon: "👤",
-      content: (
-        <div className="window-inner-content">
-          <div className="about-split">
-            <div className="photo-placeholder-small"></div>
-            <div>
-              <h3>Hi, I'm John Doe</h3>
-              <p>Full Stack Developer | Open Source Enthusiast</p>
-              <p>I build clean, efficient, and user-friendly web applications. My design philosophy is heavily inspired by elegant and functional Linux distributions.</p>
-            </div>
-          </div>
-        </div>
-      ),
+      content: <ResumeApp />,
     },
     {
       id: "skills", title: "Skills", icon: "⚙️",
-      content: (
-        <div className="window-inner-content skills-wrapper">
-          <h2 style={{marginTop: 0, marginBottom: '2rem', color: '#fff', textAlign: 'center'}}>Technical Arsenal</h2>
-          <div className="skills-grid-modern">
-            {skillCategories.map(cat => (
-              <div key={cat.category} className="skill-category-card">
-                <h3 className="skill-category-title">{cat.category}</h3>
-                <div className="skill-category-items">
-                   {cat.skills.map(skill => (
-                     <div key={skill} className="skill-item-modern">
-                        <span className="skill-dot"></span>
-                        {skill}
-                     </div>
-                   ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ),
+      content: <SkillsApp />,
     },
     {
       id: "projects", title: "Projects", icon: "📁",
-      content: (
-        <div className="window-inner-content projects-grid">
-          {projects.map((project) => (
-            <div key={project.id} className="project-card">
-              <div className="project-card-header"></div>
-              <div className="project-card-body">
-                <h4>{project.title}</h4>
-                <p>{project.description}</p>
-                <div className="project-tags">
-                  {project.tags.map((tag) => <span key={tag} className="project-tag">{tag}</span>)}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      ),
+      content: <ProjectsApp />,
+    },
+    {
+      id: "github", title: "GitHub Stats", icon: "🐙",
+      content: <GithubApp />,
+    },
+    {
+      id: "contact", title: "Hire Me", icon: "📬",
+      content: <ContactApp />,
     },
     {
       id: "terminal", title: "Terminal", icon: ">_",
@@ -319,6 +295,10 @@ export default function PortfolioDesktop() {
     {
       id: "browser", title: "Web Browser", icon: "🌐",
       content: <BrowserApp />,
+    },
+    {
+      id: "vscode", title: "VS Code", icon: "💻",
+      content: <VsCodeApp />,
     }
   ];
 
@@ -334,7 +314,11 @@ export default function PortfolioDesktop() {
     );
   }
 
-  const handleLogin = () => {
+  const handleLogin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (loginInput.toLowerCase() === 'hireme') {
+      setIsRecruiterMode(true);
+    }
     setIsLoggingIn(true);
     setTimeout(() => {
       setIsLoggingIn(false);
@@ -351,18 +335,28 @@ export default function PortfolioDesktop() {
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </div>
         </div>
-        <div className="login-box-modern">
-          <div className="login-avatar-modern">JD</div>
-          <h2 className="login-name">John Doe</h2>
+        <form className="login-box-modern" onSubmit={handleLogin}>
+          <div className="login-avatar-modern">SI</div>
+          <h2 className="login-name">Samiul Islam</h2>
           
+          <input 
+            type="password" 
+            className="login-input" 
+            placeholder="Password (Hint: hireme)" 
+            value={loginInput}
+            onChange={(e) => setLoginInput(e.target.value)}
+            disabled={isLoggingIn}
+            autoFocus
+          />
+
           <button 
+            type="submit"
             className="login-action-btn" 
-            onClick={handleLogin}
             disabled={isLoggingIn}
           >
             {isLoggingIn ? <div className="login-spinner"></div> : "Log In"}
           </button>
-        </div>
+        </form>
       </div>
     );
   }
@@ -376,6 +370,18 @@ export default function PortfolioDesktop() {
         setContextMenu({ x: e.clientX, y: e.clientY });
       }}
     >
+      {/* First Boot Recruiter Logic */}
+      {(() => {
+        if (sysState === "desktop" && isRecruiterMode && !achievements.has('recruiter')) {
+           setTimeout(() => {
+             triggerAchievement('recruiter', 'Recruiter Access Granted', 'Deployed best projects and contact info.');
+             if (!openWindows.find(w => w.id === 'about')) toggleWindow('about');
+             if (!openWindows.find(w => w.id === 'contact')) toggleWindow('contact');
+           }, 1000);
+        }
+        return null;
+      })()}
+
       {/* Click outside to close menu overlay */}
       {isMenuOpen && <div className="overlay-invisible" onClick={() => setIsMenuOpen(false)} />}
 
@@ -485,12 +491,32 @@ export default function PortfolioDesktop() {
         })}
       </div>
 
+      {/* Notifications Container */}
+      <div className="notifications-container">
+        {notifications.map(n => (
+          <div key={n.id} className={`notification-toast ${n.type}`}>
+            <div className="notification-icon">{n.icon}</div>
+            <div className="notification-content">
+              <h4>{n.title}</h4>
+              <p>{n.message}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* AI Assistant */}
+      <AiAssistant openApp={toggleWindow} />
+
       {/* Taskbar / Panel */}
       <div className="taskbar">
         <div className="taskbar-left">
           <button 
             className={`mint-menu-btn ${isMenuOpen ? 'active' : ''}`} 
-            onClick={(e) => { e.stopPropagation(); setIsMenuOpen(!isMenuOpen); }}
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              setIsMenuOpen(!isMenuOpen); 
+              if (!isMenuOpen) triggerAchievement('curious', 'Curious Explorer', 'Opened the Start Menu for the first time!');
+            }}
             style={{ zIndex: 1600 }}
           >
             <span className="mint-logo">LM</span> Menu
